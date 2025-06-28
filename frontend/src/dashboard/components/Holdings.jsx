@@ -1,7 +1,8 @@
 import React from "react";
 import { useState,useEffect } from "react";
 import axios from "axios";
-
+import { VerticalGraph } from "./VerticalGraph";
+import { amber } from "@mui/material/colors";
 
 const Holdings = () => {
 
@@ -12,6 +13,19 @@ useEffect(()=>{
     setAllHoldings(res.data);
   })
 },[])
+
+ const labels=allHoldings.map((subArray)=>subArray["name"]);
+
+ const data={
+  labels,
+  datasets:[
+    {
+      label:"Stock Price",
+      data:allHoldings.map((stock)=>stock.price),
+      backgroundColor: "rgba(255, 99, 132, 0.5)",
+    }
+  ]
+ }
 
 
 
@@ -77,6 +91,7 @@ useEffect(()=>{
           <p>P&L</p>
         </div>
       </div>
+      <VerticalGraph data={data} />
     </>
   );
 };
