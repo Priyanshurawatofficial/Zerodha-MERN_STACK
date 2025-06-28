@@ -1,4 +1,3 @@
-
 const {User}=require("../model/UserModel");
 const { createSecretToken } = require("../util/SecretToken");
 const bcrypt=require("bcrypt");
@@ -72,6 +71,7 @@ module.exports.Login=async(req,res,next)=>{
 
 
 module.exports.userVerification = (req, res) => {
+  console.log("Verification request received");
   const token = req.cookies.token
   if (!token) {
     return res.json({ status: false })
@@ -81,11 +81,17 @@ module.exports.userVerification = (req, res) => {
      return res.json({ status: false })
     } else {
       const user = await User.findById(data.id)
+      console.log(data)
       if (user) return res.json({ status: true, user: user.username })
       else return res.json({ status: false })
     }
   })
 }
+
+module.exports.Logout = (req, res) => {
+  res.clearCookie("token", { path: "/" });
+  res.status(200).json({ message: "Logged out successfully" });
+};
 
 
 

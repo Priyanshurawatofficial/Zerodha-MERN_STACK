@@ -5,7 +5,7 @@ import axios from "axios";
 
 import GeneralContext from "./GeneralContext";
 
-import "./SellActionWindow.css";
+
 
 const SellActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
@@ -21,6 +21,7 @@ const SellActionWindow = ({ uid }) => {
       mode: "Sell",
     }).then(()=>{
         console.log("new order inserted")
+
     }).catch((e)=>{
         console.log("error is----",e);
     });
@@ -33,7 +34,7 @@ closeSellWindow();
   };
 
   return (
-    <div className="container" id="sell-window" draggable="true">
+    <div className="sell-container" id="sell-window" draggable="true">
       <div className="regular-order">
         <div className="inputs">
             <h3>{uid}</h3>

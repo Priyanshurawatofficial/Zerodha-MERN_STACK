@@ -5,7 +5,7 @@ import axios from "axios";
 
 import GeneralContext from "./GeneralContext";
 
-import "./BuyActionWindow.css";
+
 
 const BuyActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
@@ -33,7 +33,7 @@ closeBuyWindow();
   };
 
   return (
-    <div className="container" id="buy-window" draggable="true">
+    <div className="buy-container" id="buy-window" draggable="true">
       <div className="regular-order">
         <div className="inputs">
             <h3>{uid}</h3>

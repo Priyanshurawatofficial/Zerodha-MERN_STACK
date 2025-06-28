@@ -1,10 +1,23 @@
 import React from "react";
-
+import axios  from "axios";
+import { useEffect,useState } from "react";
 const Summary = () => {
+ 
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/verification", { withCredentials: true })
+      .then((res)=>{
+        setUser(res.data);
+        console.log(res.data);
+      })
+      .catch(() => setUser(null));
+  }, []);
+ 
   return (
     <>
       <div className="username">
-        <h6>Hi, User!</h6>
+        <h6>Hi, {user && user.user ? user.user : "Guest"}</h6>
         <hr className="divider" />
       </div>
 

@@ -2,9 +2,6 @@ require('dotenv').config();
 const express = require("express")
 const app=express();
 const mongoose=require("mongoose")
-const passport=require("passport")
-const passport_local=require("passport-local")
-const passport_local_mongoose=require("passport-local-mongoose")
 const bodyparser=require("body-parser")
 const cors=require("cors")
 const bcrypt=require("bcrypt")
@@ -18,18 +15,17 @@ const local_port=3000;
 const {SignUp} =require("./controllers/AuthController");
 const {Login} =require("./controllers/AuthController")
 const {userVerification}=require("./controllers/AuthController");
+const {Logout}=require("./controllers/AuthController");
 
 
 const {HoldingsModel}=require("./model/HoldingsModel");
 const {PositionsModel} = require('./model/PositionsModel');
 const {OrdersModel}=require("./model/OrdersModel");
 
-app.use(cors(
-    {
-  origin: "http://localhost:3000", // or wherever your frontend runs
+app.use(cors({
+  origin: 'http://localhost:3001', // your frontend URL
   credentials: true
-    }
-));
+}));
 app.use(bodyparser.json())
 app.use(cookieParser());
 
@@ -79,6 +75,11 @@ app.get("/allOrders",async(req,res)=>{
 })  
 
 
+
+
 app.post("/signup",SignUp);
 app.post("/login",Login);
-app.post("/verification",userVerification);
+app.get("/verification",userVerification);
+app.post("/logout",Logout);
+
+
