@@ -41,13 +41,10 @@ const handleError=(err)=>{
     setLoadingMessage("");
     try {
       const {data} = await axios.post(
-        "http://localhost:3000/signup", 
-        {
-         ...formData,
-        },
-        {
-          withCredentials:true
-        });
+        "https://zerodha-mern-stack.onrender.com/signup", 
+        { ...formData },
+        { withCredentials:true }
+        );
         const {success,message}=data;
         if(success){
           handleSuccess(message);

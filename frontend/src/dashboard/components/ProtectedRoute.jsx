@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children }) => {
   const [auth, setAuth] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/verification", { withCredentials: true })
+    axios.get("https://zerodha-mern-stack.onrender.com/verification", { withCredentials: true })
       .then(res => setAuth(res.data.status))
       .catch(() => setAuth(false));
   }, []);
