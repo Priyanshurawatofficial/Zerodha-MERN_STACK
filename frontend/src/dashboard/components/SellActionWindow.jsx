@@ -12,7 +12,9 @@ const SellActionWindow = ({ stock }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/verification", { withCredentials: true })
+      .get("https://zerodha-mern-stack.onrender.com/verification", {
+        withCredentials: true,
+      })
       .then((res) => {
         if (res.data.status) setUsername(res.data.user_id);
       })
@@ -29,7 +31,7 @@ const SellActionWindow = ({ stock }) => {
 
   const handleSellClick = async () => {
     axios
-      .post("http://localhost:3000/newOrder", {
+      .post("https://zerodha-mern-stack.onrender.com/newOrder", {
         name: stock.name,
         price: stock.price,
         avg: stock.avg,

@@ -5,14 +5,14 @@ import GeneralContext from "./GeneralContext";
 
 // You should pass the full stock object as a prop, not just uid
 const BuyActionWindow = ({ stock }) => {
-  if (!stock) return null; // Prevents error if stock is undefined
-
   const [stockQuantity, setStockQuantity] = useState(1);
   const [username, setUsername] = useState("");
-  const [totalPrice, setTotalPrice] = useState(stock.price);
+  const [totalPrice, setTotalPrice] = useState(stock?.price || 0);
+
+  const { closeBuyWindow } = useContext(GeneralContext);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/verification", { withCredentials: true })
+    axios.get("https://zerodha-mern-stack.onrender.com/verification", { withCredentials: true })
       .then(res => {
         if (res.data.status) setUsername(res.data.user_id);
       })
@@ -22,13 +22,13 @@ const BuyActionWindow = ({ stock }) => {
   }, []);
 
   useEffect(() => {
-    setTotalPrice((stock.price * stockQuantity).toFixed(2));
-  }, [stockQuantity, stock.price]);
+    if (stock) setTotalPrice((stock.price * stockQuantity).toFixed(2));
+  }, [stockQuantity, stock?.price]);
 
-  const { closeBuyWindow } = useContext(GeneralContext);
+  if (!stock) return null; // <-- after all hooks
 
   const handleBuyClick = async () => {
-    axios.post("http://localhost:3000/newOrder", {
+    axios.post("https://zerodha-mern-stack.onrender.com/newOrder", {
       name: stock.name,
       price: stock.price,
       avg: stock.avg,

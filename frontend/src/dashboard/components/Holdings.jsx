@@ -9,7 +9,7 @@ const Holdings = () => {
 
   useEffect(() => {
     axios
-      .get("https://your-frontend.onrender.com", { withCredentials: true })
+      .get("https://zerodha-mern-stack.onrender.com/verification", { withCredentials: true })
       .then((res) => {
         if (res.data.status) setUsername(res.data.user_id);
       })
@@ -21,7 +21,7 @@ const Holdings = () => {
   useEffect(() => {
     if (!username) return;
     axios
-      .get(`http://localhost:3000/allOrders?userid=${username}`, { withCredentials: true })
+      .get(`https://zerodha-mern-stack.onrender.com/allOrders?userid=${username}`, { withCredentials: true })
       .then((res) => {
         setAllHoldings(res.data);
       })

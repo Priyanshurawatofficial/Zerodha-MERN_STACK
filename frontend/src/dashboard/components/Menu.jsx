@@ -95,7 +95,7 @@ const Menu = () => {
                   padding: '8px 0',
                 }}
                 onClick={async () => {
-                  await axios.post("http://localhost:3000/logout", {}, { withCredentials: true });
+                  await axios.post("https://zerodha-mern-stack.onrender.com/logout", {}, { withCredentials: true });
                   window.location.href = '/';
                 }}
               >

@@ -7,7 +7,7 @@ const Positions = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/verification", { withCredentials: true })
+      .get("https://zerodha-mern-stack.onrender.com/verification", { withCredentials: true })
       .then((res) => {
         if (res.data.status) setUsername(res.data.user_id);
       })
@@ -19,7 +19,7 @@ const Positions = () => {
   useEffect(() => {
     if (!username) return;
     axios
-      .get(`http://localhost:3000/allOrders?userid=${username}`, { withCredentials: true })
+      .get(`https://zerodha-mern-stack.onrender.com/allOrders?userid=${username}`, { withCredentials: true })
       .then((res) => {
         setAllPositions(res.data);
       })
@@ -31,7 +31,7 @@ const Positions = () => {
   const handleClosePosition = (stock) => {
     if (!window.confirm(`Are you sure you want to close position for ${stock.name} (${stock.product})?`)) return;
     axios
-      .delete(`http://localhost:3000/removePosition/${stock._id}`, { withCredentials: true })
+      .delete(`https://zerodha-mern-stack.onrender.com/removePosition/${stock._id}`, { withCredentials: true })
       .then(() => {
         setAllPositions((prev) => prev.filter((item) => item._id !== stock._id));
       })
