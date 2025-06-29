@@ -18,8 +18,7 @@ const {userVerification}=require("./controllers/AuthController");
 const {Logout}=require("./controllers/AuthController");
 
 
-const {HoldingsModel}=require("./model/HoldingsModel");
-const {PositionsModel} = require('./model/PositionsModel');
+
 const {OrdersModel}=require("./model/OrdersModel");
 
 app.use(cors({
@@ -46,15 +45,6 @@ app.get("/",(req,res)=>{
     res.send("Opened window")
 })
 
-app.get("/allHoldings",async(req,res)=>{
-    let allHoldings=await HoldingsModel.find({});
-    res.json(allHoldings);
-})
-
-app.get("/allPositions",async(req,res)=>{
-    let allPositions=await PositionsModel.find({});
-    res.json(allPositions);
-})
 
 app.post("/newOrder", async (req, res) => {
   let newOrder = new OrdersModel({

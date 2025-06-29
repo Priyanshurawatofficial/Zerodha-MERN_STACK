@@ -9,7 +9,7 @@ const Holdings = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/verification", { withCredentials: true })
+      .get("https://your-frontend.onrender.com", { withCredentials: true })
       .then((res) => {
         if (res.data.status) setUsername(res.data.user_id);
       })
