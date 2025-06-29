@@ -22,7 +22,7 @@ const {Logout}=require("./controllers/AuthController");
 const {OrdersModel}=require("./model/OrdersModel");
 
 app.use(cors({
-  origin: 'http://localhost:3001', // your frontend URL
+  origin: 'https://zerodha-mern-stack-1.onrender.com', // your frontend URL
   credentials: true
 }));
 app.use(bodyparser.json())
