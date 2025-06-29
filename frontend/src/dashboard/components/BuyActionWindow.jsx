@@ -1,68 +1,104 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-
 import axios from "axios";
-
 import GeneralContext from "./GeneralContext";
 
+// You should pass the full stock object as a prop, not just uid
+const BuyActionWindow = ({ stock }) => {
+  if (!stock) return null; // Prevents error if stock is undefined
 
-
-const BuyActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
-  const [stockPrice, setStockPrice] = useState(0.0);
+  const [username, setUsername] = useState("");
+  const [totalPrice, setTotalPrice] = useState(stock.price);
 
+  useEffect(() => {
+    axios.get("http://localhost:3000/verification", { withCredentials: true })
+      .then(res => {
+        if (res.data.status) setUsername(res.data.user_id);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
 
-    const { closeBuyWindow } = useContext(GeneralContext);
-  const handleBuyClick = async() => {
+  useEffect(() => {
+    setTotalPrice((stock.price * stockQuantity).toFixed(2));
+  }, [stockQuantity, stock.price]);
+
+  const { closeBuyWindow } = useContext(GeneralContext);
+
+  const handleBuyClick = async () => {
     axios.post("http://localhost:3000/newOrder", {
-      name: uid,
+      name: stock.name,
+      price: stock.price,
+      avg: stock.avg,
+      percent: stock.percent,
+      isDown: stock.isDown,
+      net: stock.net,
+      day: stock.day,
+      isLoss: stock.isLoss,
       qty: stockQuantity,
-      price: stockPrice,
+      product: stock.product,
       mode: "BUY",
-    }).then(()=>{
-        console.log("new order inserted")
-    }).catch((e)=>{
-        console.log("error is----",e);
+      userid: username,
+    }).then(() => {
+      console.log("new order inserted");
+      closeBuyWindow();
+    }).catch((e) => {
+      console.log("error is----", e);
     });
-closeBuyWindow();
-     
   };
 
   const handleCancelClick = () => {
     closeBuyWindow();
   };
 
+  const handleQuantityChange = (e) => {
+    const qty = Number(e.target.value);
+    setStockQuantity(qty > 0 ? qty : 1);
+  };
+
   return (
     <div className="buy-container" id="buy-window" draggable="true">
       <div className="regular-order">
         <div className="inputs">
-            <h3>{uid}</h3>
+          <h3>{stock.name}</h3>
           <fieldset>
             <legend>Qty.</legend>
             <input
               type="number"
               name="qty"
               id="qty"
-              onChange={(e) => setStockQuantity(e.target.value)}
+              min={1}
+              onChange={handleQuantityChange}
               value={stockQuantity}
             />
           </fieldset>
           <fieldset>
-            <legend>Price</legend>
+            <legend>Price per unit</legend>
             <input
               type="number"
               name="price"
               id="price"
-              step="0.05"
-              onChange={(e) => setStockPrice(e.target.value)}
-              value={stockPrice}
+              value={stock.price}
+              readOnly
+            />
+          </fieldset>
+          <fieldset>
+            <legend>Total Price</legend>
+            <input
+              type="number"
+              name="totalPrice"
+              id="totalPrice"
+              value={totalPrice}
+              readOnly
             />
           </fieldset>
         </div>
       </div>
 
       <div className="buttons">
-        <span>Margin required ₹140.65</span>
+        <span>Margin required ₹{totalPrice}</span>
         <div>
           <Link className="btn btn-blue" onClick={handleBuyClick}>
             Buy

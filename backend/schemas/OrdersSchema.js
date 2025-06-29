@@ -1,11 +1,21 @@
-const {Schema}=require("mongoose")
+const { Schema } = require("mongoose");
 
-const OrdersSchema=new Schema({
-   
-    name:String,
-    qty: Number,
+const OrdersSchema = new Schema({
+    name: String,
     price: Number,
-    mode:String,
+    avg: Number,
+    percent: String,
+    isDown: Boolean,
+    net: String,
+    day: String,
+    isLoss: Boolean,
+    qty: Number,
+    product: String,
+    mode: String,
+    user: {
+        type: String,
+        default: "user1"
+    }
 });
 
-module.exports ={OrdersSchema};
+module.exports = { OrdersSchema };

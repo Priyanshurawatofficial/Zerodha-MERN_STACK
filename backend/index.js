@@ -56,24 +56,33 @@ app.get("/allPositions",async(req,res)=>{
     res.json(allPositions);
 })
 
-app.post("/newOrder",async(req,res)=>{
-     let newOrder=new OrdersModel({
-        name:req.body.name,
-        qty:req.body.qty,
-        price:req.body.price,
-        mode:req.body.mode,
-     });
-     await newOrder.save();
-     res.send("order saved")
-})
+app.post("/newOrder", async (req, res) => {
+  let newOrder = new OrdersModel({
+    name: req.body.name,
+    price: req.body.price,
+    avg: req.body.avg,
+    percent: req.body.percent,
+    isDown: req.body.isDown,
+    net: req.body.net,
+    day: req.body.day,
+    isLoss: req.body.isLoss,
+    qty: req.body.qty,
+    product: req.body.product,
+    mode: req.body.mode,
+    user: req.body.userid,
+  });
+  console.log("new order is", newOrder);
+  await newOrder.save();
+  res.send("order saved");
+});
 
 
 
-app.get("/allOrders",async(req,res)=>{
-    let allOrders=await OrdersModel.find({});
-    res.json(allOrders);
-})  
-
+app.get("/allOrders", async (req, res) => {
+  const userid = req.query.userid;
+  let userOrders = await OrdersModel.find({ user: userid });
+  res.json(userOrders);
+});
 
 
 
@@ -81,5 +90,14 @@ app.post("/signup",SignUp);
 app.post("/login",Login);
 app.get("/verification",userVerification);
 app.post("/logout",Logout);
+app.delete("/removePosition/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await OrdersModel.findByIdAndDelete(id);
+    res.json({ success: true, message: "Position removed" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Error removing position" });
+  }
+});
 
 

@@ -1,69 +1,107 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 import axios from "axios";
-
 import GeneralContext from "./GeneralContext";
 
-
-
-const SellActionWindow = ({ uid }) => {
+const SellActionWindow = ({ stock }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
-  const [stockPrice, setStockPrice] = useState(0.0);
+  const [username, setUsername] = useState("");
+  const [totalPrice, setTotalPrice] = useState(stock?.price || 0);
 
+  const { closeSellWindow } = useContext(GeneralContext);
 
-    const { closeSellWindow } = useContext(GeneralContext);
-  const handleSellClick = async() => {
-    axios.post("http://localhost:3000/newOrder", {
-      name: uid,
-      qty: stockQuantity,
-      price: stockPrice,
-      mode: "Sell",
-    }).then(()=>{
-        console.log("new order inserted")
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/verification", { withCredentials: true })
+      .then((res) => {
+        if (res.data.status) setUsername(res.data.user_id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
-    }).catch((e)=>{
-        console.log("error is----",e);
-    });
-closeSellWindow();
-     
+  useEffect(() => {
+    if (stock) setTotalPrice((stock.price * stockQuantity).toFixed(2));
+  }, [stockQuantity, stock?.price]);
+
+  if (!stock) return null; // <-- move this AFTER all hooks
+
+  const handleSellClick = async () => {
+    axios
+      .post("http://localhost:3000/newOrder", {
+        name: stock.name,
+        price: stock.price,
+        avg: stock.avg,
+        percent: stock.percent,
+        isDown: stock.isDown,
+        net: stock.net,
+        day: stock.day,
+        isLoss: stock.isLoss,
+        qty: stockQuantity,
+        product: stock.product,
+        mode: "SELL",
+        userid: username,
+      })
+      .then(() => {
+        console.log("new sell order inserted");
+        closeSellWindow();
+      })
+      .catch((e) => {
+        console.log("error is----", e);
+      });
   };
 
   const handleCancelClick = () => {
     closeSellWindow();
   };
 
+  const handleQuantityChange = (e) => {
+    const qty = Number(e.target.value);
+    setStockQuantity(qty > 0 ? qty : 1);
+  };
+
   return (
     <div className="sell-container" id="sell-window" draggable="true">
       <div className="regular-order">
         <div className="inputs">
-            <h3>{uid}</h3>
+          <h3>{stock.name}</h3>
           <fieldset>
             <legend>Qty.</legend>
             <input
               type="number"
               name="qty"
               id="qty"
-              onChange={(e) => setStockQuantity(e.target.value)}
+              min={1}
+              onChange={handleQuantityChange}
               value={stockQuantity}
             />
           </fieldset>
           <fieldset>
-            <legend>Price</legend>
+            <legend>Price per unit</legend>
             <input
               type="number"
               name="price"
               id="price"
-              step="0.05"
-              onChange={(e) => setStockPrice(e.target.value)}
-              value={stockPrice}
+              value={stock.price}
+              readOnly
+            />
+          </fieldset>
+          <fieldset>
+            <legend>Total Price</legend>
+            <input
+              type="number"
+              name="totalPrice"
+              id="totalPrice"
+              value={totalPrice}
+              readOnly
             />
           </fieldset>
         </div>
       </div>
 
       <div className="buttons">
-        <span>Margin required ₹140.65</span>
+        <span>Margin required ₹{totalPrice}</span>
         <div>
           <Link className="btn btn-red" onClick={handleSellClick}>
             Sell
