@@ -48,9 +48,7 @@ const Orders = () => {
         <>
           <h3 className="title">
             Orders ({allOrders.length}){" "}
-            <form action="/dashboard/orders">
-              <button>refresh</button>
-            </form>
+           
           </h3>
           <div className="order-table">
             <table>
